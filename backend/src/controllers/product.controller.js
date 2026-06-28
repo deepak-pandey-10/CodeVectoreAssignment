@@ -38,6 +38,24 @@ const productService = require(
     }
   };
   
-  module.exports = {
-    getProducts,
-  };
+  const createProduct = async (req, res) => {
+  try {
+    const { name, category, price } = req.body;
+    if (!name || !category || !price) {
+      return res.status(400).json({ success: false, message: "Missing required fields" });
+    }
+    const result = await productService.createProduct({ name, category, price });
+    return res.status(201).json(result);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+module.exports = {
+  getProducts,
+  createProduct,
+};

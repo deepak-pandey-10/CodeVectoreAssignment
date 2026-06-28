@@ -148,6 +148,22 @@ const getProducts = async ({
   };
 };
 
+const createProduct = async (data) => {
+  const { name, category, price } = data;
+  const product = await prisma.product.create({
+    data: {
+      name,
+      category,
+      price,
+    },
+  });
+  return {
+    success: true,
+    data: serialize(product),
+  };
+};
+
 module.exports = {
   getProducts,
+  createProduct,
 };

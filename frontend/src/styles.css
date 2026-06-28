@@ -290,3 +290,62 @@ tbody tr:hover {
     font-size: 2.25rem;
   }
 }
+
+.add-product-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: flex-end;
+  margin-bottom: 24px;
+  padding: 16px;
+  background: #ffffff;
+  border: 1px solid #d9e1f2;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(24, 39, 75, 0.04);
+}
+
+.input-field {
+  display: grid;
+  gap: 8px;
+  flex: 1;
+  min-width: 200px;
+}
+
+.input-field span {
+  color: #526179;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.input-field input, .input-field select {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid #ccd6ea;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #172033;
+  font-weight: 600;
+}
+
+.submit-button {
+  min-height: 44px;
+  padding: 0 24px;
+  border: 1px solid #102f7a;
+  border-radius: 8px;
+  background: #102f7a;
+  color: #ffffff;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 160ms ease;
+}
+.submit-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(16, 47, 122, 0.2);
+}
+.submit-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

@@ -88,6 +88,10 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [newProduct, setNewProduct] = useState({ name: "", category: "Electronics", price: "" });
+  const [isAdding, setIsAdding] = useState(false);
+
   const selectedCategory = category === "All" ? "" : category;
 
   const productCountLabel = useMemo(() => {
@@ -155,6 +159,34 @@ function App() {
     setPage(1);
   };
 
+  const handleAddProduct = async (e) => {
+    e.preventDefault();
+    setIsAdding(true);
+    setError("");
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/products`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...newProduct,
+          price: Number(newProduct.price)
+        }),
+      });
+      const result = await response.json();
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || "Failed to add product");
+      }
+      setNewProduct({ name: "", category: "Electronics", price: "" });
+      setShowAddForm(false);
+      fetchProducts(1);
+      setPage(1);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setIsAdding(false);
+    }
+  };
+
   return (
     <main className="app-shell">
       <section className="toolbar">
@@ -186,7 +218,55 @@ function App() {
             ))}
           </select>
         </label>
+        <button 
+          className="page-button" 
+          style={{ alignSelf: "flex-end" }} 
+          onClick={() => setShowAddForm(!showAddForm)}
+        >
+          {showAddForm ? "Cancel" : "+ Add Product"}
+        </button>
       </section>
+
+      {showAddForm && (
+        <form className="add-product-form" onSubmit={handleAddProduct}>
+          <label className="input-field">
+            <span>Name</span>
+            <input 
+              required
+              type="text" 
+              value={newProduct.name} 
+              onChange={e => setNewProduct({...newProduct, name: e.target.value})} 
+              placeholder="Product Name"
+            />
+          </label>
+          <label className="input-field">
+            <span>Category</span>
+            <select 
+              value={newProduct.category} 
+              onChange={e => setNewProduct({...newProduct, category: e.target.value})}
+            >
+              {CATEGORIES.filter(c => c !== "All").map(c => (
+                <option key={c} value={c}>{c}</option>
+              ))}
+            </select>
+          </label>
+          <label className="input-field">
+            <span>Price</span>
+            <input 
+              required
+              type="number" 
+              step="0.01" 
+              min="0"
+              value={newProduct.price} 
+              onChange={e => setNewProduct({...newProduct, price: e.target.value})} 
+              placeholder="0.00"
+            />
+          </label>
+          <button type="submit" className="submit-button" disabled={isAdding}>
+            {isAdding ? "Adding..." : "Add Product"}
+          </button>
+        </form>
+      )}
 
       {error && (
         <div className="alert" role="alert">
